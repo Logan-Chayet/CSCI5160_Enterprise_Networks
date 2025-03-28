@@ -1,0 +1,218 @@
+!
+version 12.2
+no service pad
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+!
+hostname PiPal
+!
+boot-start-marker
+boot-end-marker
+!
+!
+username admin privilege 15 secret 5 $1$21eR$DyxtPbuZ8B3oilYmPuh.I0
+!
+!
+no aaa new-model
+switch 1 provision ws-c3750g-48ts
+system mtu routing 1504
+vtp domain S25_midterm
+vtp mode transparent
+ip domain-name PiPal.com
+!
+!
+!
+!
+!
+!
+!
+!
+!
+spanning-tree mode pvst
+spanning-tree extend system-id
+spanning-tree vlan 20,30 priority 12288
+!
+vlan internal allocation policy ascending
+!
+vlan 2
+ name wired1
+!
+vlan 4
+ name wireless1
+!
+vlan 10
+ name SpaceX
+!
+vlan 20
+ name Tesla
+!
+vlan 30
+ name X.com
+!
+vlan 40
+ name Nueralink
+!
+ip ssh version 2
+!
+!
+!
+interface Port-channel1
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+ bandwidth 500000
+!
+interface Port-channel2
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+ bandwidth 500000
+!
+interface GigabitEthernet1/0/1
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+ channel-group 1 mode active
+!
+interface GigabitEthernet1/0/2
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+ channel-group 1 mode active
+!
+interface GigabitEthernet1/0/3
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+ channel-group 2 mode desirable
+!
+interface GigabitEthernet1/0/4
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+ channel-group 2 mode desirable
+!
+interface GigabitEthernet1/0/5
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+!
+interface GigabitEthernet1/0/6
+ switchport access vlan 20
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+!
+interface GigabitEthernet1/0/7
+!
+interface GigabitEthernet1/0/8
+!
+interface GigabitEthernet1/0/9
+!
+interface GigabitEthernet1/0/10
+!
+interface GigabitEthernet1/0/11
+!
+interface GigabitEthernet1/0/12
+!
+interface GigabitEthernet1/0/13
+!
+interface GigabitEthernet1/0/14
+!
+interface GigabitEthernet1/0/15
+!
+interface GigabitEthernet1/0/16
+!
+interface GigabitEthernet1/0/17
+!
+interface GigabitEthernet1/0/18
+!
+interface GigabitEthernet1/0/19
+!
+interface GigabitEthernet1/0/20
+ switchport access vlan 40
+!
+interface GigabitEthernet1/0/21
+ switchport access vlan 10
+!
+interface GigabitEthernet1/0/22
+ switchport access vlan 20
+!
+interface GigabitEthernet1/0/23
+ switchport access vlan 30
+!
+interface GigabitEthernet1/0/24
+ switchport access vlan 40
+!
+interface GigabitEthernet1/0/25
+!
+interface GigabitEthernet1/0/26
+!
+interface GigabitEthernet1/0/27
+!
+interface GigabitEthernet1/0/28
+!
+interface GigabitEthernet1/0/29
+!
+interface GigabitEthernet1/0/30
+!
+interface GigabitEthernet1/0/31
+!
+interface GigabitEthernet1/0/32
+!
+interface GigabitEthernet1/0/33
+!
+interface GigabitEthernet1/0/34
+!
+interface GigabitEthernet1/0/35
+!
+interface GigabitEthernet1/0/36
+!
+interface GigabitEthernet1/0/37
+!
+interface GigabitEthernet1/0/38
+!
+interface GigabitEthernet1/0/39
+!
+interface GigabitEthernet1/0/40
+!
+interface GigabitEthernet1/0/41
+!
+interface GigabitEthernet1/0/42
+!
+interface GigabitEthernet1/0/43
+!
+interface GigabitEthernet1/0/44
+!
+interface GigabitEthernet1/0/45
+!
+interface GigabitEthernet1/0/46
+!
+interface GigabitEthernet1/0/47
+!
+interface GigabitEthernet1/0/48
+!
+interface GigabitEthernet1/0/49
+!
+interface GigabitEthernet1/0/50
+!
+interface GigabitEthernet1/0/51
+!
+interface GigabitEthernet1/0/52
+!
+interface Vlan1
+ no ip address
+!
+interface Vlan10
+ ip address 192.168.0.12 255.255.192.0
+!
+ip classless
+ip http server
+ip http secure-server
+!
+!
+!
+!
+!
+line con 0
+line vty 0 4
+ login local
+ transport input ssh
+line vty 5 15
+ login local
+ transport input ssh
+!
+end

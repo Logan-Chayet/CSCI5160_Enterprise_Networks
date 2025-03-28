@@ -1,0 +1,176 @@
+!
+version 12.2
+no service pad
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+!
+hostname SolarCity
+!
+boot-start-marker
+boot-end-marker
+!
+!
+username admin privilege 15 secret 5 $1$qUje$X7DvsRvIlpt1rEWXUjtB..
+!
+!
+no aaa new-model
+system mtu routing 1500
+vtp domain S25_midterm
+vtp mode transparent
+!
+!
+ip domain-name SolarCity.com
+!
+!
+crypto pki trustpoint TP-self-signed-1476308224
+ enrollment selfsigned
+ subject-name cn=IOS-Self-Signed-Certificate-1476308224
+ revocation-check none
+ rsakeypair TP-self-signed-1476308224
+!
+!
+crypto pki certificate chain TP-self-signed-1476308224
+ certificate self-signed 01
+  3082023F 308201A8 A0030201 02020101 300D0609 2A864886 F70D0101 04050030 
+  31312F30 2D060355 04031326 494F532D 53656C66 2D536967 6E65642D 43657274 
+  69666963 6174652D 31343736 33303832 3234301E 170D3933 30333031 30303031 
+  35365A17 0D323030 31303130 30303030 305A3031 312F302D 06035504 03132649 
+  4F532D53 656C662D 5369676E 65642D43 65727469 66696361 74652D31 34373633 
+  30383232 3430819F 300D0609 2A864886 F70D0101 01050003 818D0030 81890281 
+  8100B8E3 B39F816E 2D8610F3 B78EBAD1 82FF07DB D9342CD4 EA162F78 CB871E64 
+  5ACA702F DA63B7F7 540617E5 C88557C9 536B80B4 6DD6FACC 70D10D6A FB1A0C4E 
+  1DE22D50 BB9A79B6 9416C8CF 1C1AD79C 375B2C31 FBBF803B 7C28EE71 E68D06A1 
+  3B26567B A3DF9EED 0162A584 AC8DC2E2 3B25193C 53DEC33F D82FFF7B B338AC9A 
+  EC850203 010001A3 67306530 0F060355 1D130101 FF040530 030101FF 30120603 
+  551D1104 0B300982 07537769 7463682E 301F0603 551D2304 18301680 14E99EE8 
+  2C1E26C5 406EBB17 E1B696D6 02537364 DD301D06 03551D0E 04160414 E99EE82C 
+  1E26C540 6EBB17E1 B696D602 537364DD 300D0609 2A864886 F70D0101 04050003 
+  81810048 6DB02B26 458F8596 7F9B3DDB 75794CE3 7D7462C9 4E32FBD8 83EB779A 
+  D7973A4C 576FC80A A7674C2C DDEE9922 F8AF0358 38D7BD9C AE441C98 F8919FB1 
+  A1C3AD5C AFC84041 B0B485A1 9F33DFE2 F40E662F 4FC78C3A 5CB7689B 6A4420C6 
+  6017CA6C FA4850EB 3C76B2AB 05A1DCCF 9D296D20 F58A8870 E98F56C9 D1723F5D 790804
+  quit
+!
+!
+!
+!
+spanning-tree mode pvst
+spanning-tree extend system-id
+spanning-tree vlan 40 priority 24576
+!
+vlan internal allocation policy ascending
+!
+vlan 10
+ name SpaceX
+!
+vlan 20
+ name Tesla
+!
+vlan 30
+ name X.com
+!
+vlan 40
+ name Nueralink
+!
+ip ssh version 2
+!
+!
+interface Port-channel1
+ switchport mode trunk
+!
+interface Port-channel2
+ switchport mode trunk
+ bandwidth 500000
+ spanning-tree cost 100
+!
+interface FastEthernet0/1
+ switchport mode trunk
+ channel-group 1 mode active
+!
+interface FastEthernet0/2
+ switchport mode trunk
+ channel-group 1 mode active
+!
+interface FastEthernet0/3
+ switchport mode trunk
+ channel-group 2 mode auto
+!
+interface FastEthernet0/4
+ switchport mode trunk
+ channel-group 2 mode auto
+!
+interface FastEthernet0/5
+ switchport mode trunk
+!
+interface FastEthernet0/6
+ switchport mode trunk
+!
+interface FastEthernet0/7
+ switchport mode trunk
+!
+interface FastEthernet0/8
+ switchport mode trunk
+ spanning-tree port-priority 16
+ spanning-tree cost 1
+!
+interface FastEthernet0/9
+!
+interface FastEthernet0/10
+!
+interface FastEthernet0/11
+!
+interface FastEthernet0/12
+!
+interface FastEthernet0/13
+!
+interface FastEthernet0/14
+!
+interface FastEthernet0/15
+!
+interface FastEthernet0/16
+!
+interface FastEthernet0/17
+!
+interface FastEthernet0/18
+!
+interface FastEthernet0/19
+!
+interface FastEthernet0/20
+ switchport access vlan 40
+!
+interface FastEthernet0/21
+ switchport access vlan 10
+!
+interface FastEthernet0/22
+ switchport access vlan 20
+!
+interface FastEthernet0/23
+ switchport access vlan 30
+!
+interface FastEthernet0/24
+ switchport access vlan 40
+!
+interface GigabitEthernet0/1
+!
+interface GigabitEthernet0/2
+!
+interface Vlan1
+ no ip address
+ shutdown
+!
+interface Vlan10
+ ip address 192.168.0.13 255.255.192.0
+!
+ip http server
+ip http secure-server
+!
+line con 0
+line vty 0 4
+ login local
+ transport input ssh
+line vty 5 15
+ login local
+ transport input ssh
+!
+end

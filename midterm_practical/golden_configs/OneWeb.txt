@@ -1,0 +1,192 @@
+!
+
+version 15.1
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+!
+hostname OneWeb
+!
+boot-start-marker
+boot-end-marker
+!
+!
+!
+no aaa new-model
+!
+no network-clock-participate slot 1 
+no network-clock-participate slot 2 
+!
+dot11 syslog
+ip source-route
+!
+ip cef
+!
+!
+!
+!
+ip domain name oneweb.com
+no ipv6 cef
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+voice-card 0
+!
+!
+!
+!
+!
+!
+!
+crypto pki token default removal timeout 0
+!
+!
+!
+!
+license udi pid CISCO3825 sn FTX1241A3TJ
+username admin privilege 15 secret 5 $1$HvCt$4i9zcqrctTuv2QFUYJ8...
+!
+redundancy
+!
+!
+ip ssh version 2
+! 
+!
+!
+!
+!
+!
+!
+!
+interface Loopback0
+ ip address 8.8.8.8 255.255.255.255
+!
+interface GigabitEthernet0/0
+ no ip address
+ duplex auto
+ speed auto
+ media-type rj45
+!
+interface GigabitEthernet0/0.10
+ encapsulation dot1Q 10
+ ip address 192.168.86.74 255.255.255.252
+ ip ospf cost 2
+!
+interface GigabitEthernet0/0.20
+ encapsulation dot1Q 20
+ ip address 192.168.86.78 255.255.255.252
+!
+interface GigabitEthernet0/0.30
+ encapsulation dot1Q 30
+ ip address 192.168.86.102 255.255.255.252
+!
+interface GigabitEthernet0/1
+ no ip address
+ duplex auto
+ speed auto
+ media-type rj45
+!
+interface GigabitEthernet0/1.10
+ encapsulation dot1Q 10
+ ip address 192.168.86.66 255.255.255.252
+ ip ospf cost 1
+!
+interface GigabitEthernet0/1.20
+ bandwidth 10
+ encapsulation dot1Q 20
+ ip address 192.168.86.70 255.255.255.252
+ delay 100000
+!
+interface GigabitEthernet0/1.30
+ encapsulation dot1Q 30
+ ip address 192.168.86.98 255.255.255.252
+!
+interface Serial0/2/0
+ ip address 192.168.86.82 255.255.255.252
+!
+interface Serial0/2/1
+ ip address 192.168.86.86 255.255.255.252
+ delay 100000
+ clock rate 2000000
+!
+interface Serial0/3/0
+ ip address 192.168.86.90 255.255.255.252
+!
+interface Serial0/3/1
+ ip address 192.168.86.94 255.255.255.252
+ clock rate 2000000
+!
+interface FastEthernet1/0
+ no ip address
+ shutdown
+ duplex auto
+ speed auto
+!
+interface FastEthernet2/0
+ no ip address
+ shutdown
+ duplex auto
+ speed auto
+!
+interface FastEthernet2/1
+ no ip address
+ shutdown
+ duplex auto
+ speed auto
+!
+!
+router eigrp 1
+ network 192.168.86.68 0.0.0.3
+ network 192.168.86.76 0.0.0.3
+ network 192.168.86.84 0.0.0.3
+ network 192.168.86.92 0.0.0.3
+ redistribute ospf 1 metric 1 1 1 1 1
+!
+router ospf 1
+ router-id 8.8.8.8
+ redistribute eigrp 1 subnets
+ network 8.8.8.8 0.0.0.0 area 0
+ network 192.168.86.64 0.0.0.3 area 0
+ network 192.168.86.72 0.0.0.3 area 0
+ network 192.168.86.80 0.0.0.3 area 0
+ network 192.168.86.88 0.0.0.3 area 0
+!
+ip forward-protocol nd
+no ip http server
+no ip http secure-server
+!
+!
+!
+!
+!
+!
+!
+!
+!
+control-plane
+!
+!
+!
+!
+mgcp profile default
+!
+!
+!
+!
+!
+!
+line con 0
+line aux 0
+line vty 0 4
+ login local
+ transport input ssh
+line vty 5 15
+ login local
+ transport input ssh
+!
+scheduler allocate 20000 1000
+end

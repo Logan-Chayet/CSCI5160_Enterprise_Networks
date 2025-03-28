@@ -1,0 +1,328 @@
+!
+version 12.2
+no service pad
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+!
+hostname GTO
+!
+boot-start-marker
+boot-end-marker
+!
+!
+username admin privilege 15 secret 5 $1$eiW.$M.gCyPFjGzqVoV6Vsi42v/
+!
+!
+no aaa new-model
+switch 1 provision ws-c3750-48ts
+system mtu routing 1500
+vtp domain S25_midterm
+vtp mode transparent
+!
+track 1 interface FastEthernet1/0/4 line-protocol
+!
+track 2 interface FastEthernet1/0/5 line-protocol
+ip routing
+ip domain-name gto.com
+ip dhcp excluded-address 192.168.64.1 192.168.64.20
+ip dhcp excluded-address 192.168.84.1 192.168.84.20
+!
+ip dhcp pool Tesla
+   network 192.168.64.0 255.255.240.0
+   default-router 192.168.64.1 
+   dns-server 5.5.5.5 
+!
+!
+ip vrf group2
+!
+!
+!
+crypto pki trustpoint TP-self-signed-1526171264
+ enrollment selfsigned
+ subject-name cn=IOS-Self-Signed-Certificate-1526171264
+ revocation-check none
+ rsakeypair TP-self-signed-1526171264
+!
+!
+crypto pki certificate chain TP-self-signed-1526171264
+ certificate self-signed 01
+  3082023C 308201A5 A0030201 02020101 300D0609 2A864886 F70D0101 04050030 
+  31312F30 2D060355 04031326 494F532D 53656C66 2D536967 6E65642D 43657274 
+  69666963 6174652D 31353236 31373132 3634301E 170D3933 30333031 30303031 
+  33355A17 0D323030 31303130 30303030 305A3031 312F302D 06035504 03132649 
+  4F532D53 656C662D 5369676E 65642D43 65727469 66696361 74652D31 35323631 
+  37313236 3430819F 300D0609 2A864886 F70D0101 01050003 818D0030 81890281 
+  810096E6 FB484B70 EE1276ED 89D4F1B3 4C5D0096 DA16C810 F4B535AD 566B296A 
+  C7E5E11A 264FB334 1489281A 814AC5BD 8CE533E0 649B2293 9683A7F3 8B029944 
+  E2F91E6C 56CC237F 08FFE961 130691BE 5E7E2D29 8D6B016D 3CD2D68F 5372E153 
+  79760A5E 31990AB6 E3168A68 D99916C2 E37011ED B6F5BE5A CFF3CB87 FAAB1564 
+  F0FD0203 010001A3 64306230 0F060355 1D130101 FF040530 030101FF 300F0603 
+  551D1104 08300682 0447544F 2E301F06 03551D23 04183016 8014C7D3 BC402E2E 
+  3E6E8DBA 9942C7AC 018C0AB7 3671301D 0603551D 0E041604 14C7D3BC 402E2E3E 
+  6E8DBA99 42C7AC01 8C0AB736 71300D06 092A8648 86F70D01 01040500 03818100 
+  488733BA 52D16D25 C312119D A0B0FC88 A26B7617 43E4EB5C 2192DCFD 3922390B 
+  4A83B5EE 7434D1C6 A825630C 44E792F1 E638F1C0 F64CC4D9 A89E48E4 BC6AA14A 
+  B28ECC08 90F9AAC0 06997D0A 05E365E5 1EF3EA68 9629F945 A33B1816 812E7A25 
+  499C6557 36D98142 389F7501 20EA4B2A 14539D0B A87DCE81 879A8C76 6AFB5367
+  quit
+!
+!
+!
+!
+spanning-tree mode pvst
+spanning-tree extend system-id
+spanning-tree vlan 10 priority 36864
+!
+vlan internal allocation policy ascending
+!
+vlan 10
+ name SpaceX
+!
+vlan 20
+ name Tesla
+!
+vlan 30
+ name X.com
+!
+vlan 40
+ name Nueralink
+!
+vlan 50
+ name group1_moon
+!
+vlan 60
+ name group2_moon
+!
+vlan 70
+ name group1_iss
+!
+vlan 80
+ name group2_iss
+!
+ip ssh version 2
+!
+!
+!
+interface Loopback0
+ ip address 3.3.3.3 255.255.255.255
+!
+interface Port-channel1
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+ bandwidth 500000
+!
+interface FastEthernet1/0/1
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+ channel-group 1 mode active
+!
+interface FastEthernet1/0/2
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+ channel-group 1 mode active
+!
+interface FastEthernet1/0/3
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+!
+interface FastEthernet1/0/4
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+!
+interface FastEthernet1/0/5
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+!
+interface FastEthernet1/0/6
+ switchport access vlan 20
+!
+interface FastEthernet1/0/7
+!
+interface FastEthernet1/0/8
+!
+interface FastEthernet1/0/9
+!
+interface FastEthernet1/0/10
+!
+interface FastEthernet1/0/11
+!
+interface FastEthernet1/0/12
+!
+interface FastEthernet1/0/13
+!
+interface FastEthernet1/0/14
+!
+interface FastEthernet1/0/15
+!
+interface FastEthernet1/0/16
+!
+interface FastEthernet1/0/17
+!
+interface FastEthernet1/0/18
+!
+interface FastEthernet1/0/19
+!
+interface FastEthernet1/0/20
+!
+interface FastEthernet1/0/21
+ switchport access vlan 10
+!
+interface FastEthernet1/0/22
+ switchport access vlan 20
+!
+interface FastEthernet1/0/23
+ switchport access vlan 30
+!
+interface FastEthernet1/0/24
+ switchport access vlan 40
+!
+interface FastEthernet1/0/25
+!
+interface FastEthernet1/0/26
+!
+interface FastEthernet1/0/27
+!
+interface FastEthernet1/0/28
+!
+interface FastEthernet1/0/29
+!
+interface FastEthernet1/0/30
+!
+interface FastEthernet1/0/31
+!
+interface FastEthernet1/0/32
+!
+interface FastEthernet1/0/33
+!
+interface FastEthernet1/0/34
+!
+interface FastEthernet1/0/35
+!
+interface FastEthernet1/0/36
+!
+interface FastEthernet1/0/37
+!
+interface FastEthernet1/0/38
+!
+interface FastEthernet1/0/39
+!
+interface FastEthernet1/0/40
+!
+interface FastEthernet1/0/41
+!
+interface FastEthernet1/0/42
+!
+interface FastEthernet1/0/43
+!
+interface FastEthernet1/0/44
+!
+interface FastEthernet1/0/45
+!
+interface FastEthernet1/0/46
+!
+interface FastEthernet1/0/47
+!
+interface FastEthernet1/0/48
+!
+interface GigabitEthernet1/0/1
+!
+interface GigabitEthernet1/0/2
+!
+interface GigabitEthernet1/0/3
+!
+interface GigabitEthernet1/0/4
+!
+interface Vlan1
+ no ip address
+ shutdown
+!
+interface Vlan10
+ ip address 192.168.0.4 255.255.192.0
+ standby 10 ip 192.168.0.1
+ standby 10 preempt
+ standby 10 track 1 decrement 20
+ standby 10 track 2 decrement 20
+!
+interface Vlan20
+ ip address 192.168.64.4 255.255.240.0
+ standby 20 ip 192.168.64.1
+ standby 20 priority 110
+ standby 20 preempt
+ standby 20 track 1 decrement 20
+ standby 20 track 2 decrement 20
+!
+interface Vlan30
+ ip vrf forwarding group2
+ ip address 192.168.80.4 255.255.252.0
+ ip helper-address 9.9.9.9
+ standby 30 ip 192.168.80.1
+ standby 30 priority 90
+ standby 30 preempt
+ standby 30 track 1 decrement 20
+ standby 30 track 2 decrement 20
+!
+interface Vlan40
+ ip vrf forwarding group2
+ ip address 192.168.84.4 255.255.254.0
+ ip helper-address 192.168.84.3
+ standby 40 ip 192.168.84.1
+ standby 40 preempt
+ standby 40 track 1 decrement 20
+ standby 40 track 2 decrement 20
+!
+interface Vlan50
+ ip address 192.168.86.33 255.255.255.252
+ ip ospf cost 1
+!
+interface Vlan60
+ ip vrf forwarding group2
+ ip address 192.168.86.37 255.255.255.252
+ delay 10000
+!
+interface Vlan70
+ ip address 192.168.86.41 255.255.255.252
+ ip ospf cost 50
+!
+interface Vlan80
+ ip vrf forwarding group2
+ ip address 192.168.86.45 255.255.255.252
+!
+!
+router eigrp 1
+ !
+ address-family ipv4 vrf group2 autonomous-system 1
+  network 192.168.80.0 0.0.3.255
+  network 192.168.84.0 0.0.1.255
+  network 192.168.86.0
+  passive-interface Vlan30
+  passive-interface Vlan40
+ exit-address-family
+!
+router ospf 1
+ router-id 3.3.3.3
+ log-adjacency-changes
+ passive-interface Vlan10
+ passive-interface Vlan20
+ network 3.3.3.3 0.0.0.0 area 0
+ network 192.168.0.0 0.0.63.255 area 0
+ network 192.168.64.0 0.0.15.255 area 0
+ network 192.168.86.0 0.0.0.255 area 0
+!
+ip classless
+ip http server
+ip http secure-server
+!
+!
+!
+!
+!
+line con 0
+line vty 0 4
+ login local
+ transport input ssh
+line vty 5 15
+ login local
+ transport input ssh
+!
+end

@@ -1,0 +1,194 @@
+!
+
+version 15.1
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+!
+hostname Moon
+!
+boot-start-marker
+boot-end-marker
+!
+!
+!
+no aaa new-model
+!
+no network-clock-participate slot 2 
+!
+dot11 syslog
+ip source-route
+!
+!
+!
+ip vrf group2
+!
+ip cef
+!
+!
+ip domain name moon.com
+no ipv6 cef
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+voice-card 0
+!
+!
+!
+!
+!
+!
+!
+crypto pki token default removal timeout 0
+!
+!
+!
+!
+license udi pid CISCO3825 sn FTX1237A1TC
+license accept end user agreement
+username admin privilege 15 secret 5 $1$MBy/$3xrE6PC6sZwPve.H0HLV//
+!
+redundancy
+!
+!
+ip ssh version 2
+! 
+!
+!
+!
+!
+!
+!
+!
+interface Loopback0
+ ip address 4.4.4.4 255.255.255.255
+!
+interface GigabitEthernet0/0
+ no ip address
+ duplex auto
+ speed auto
+ media-type rj45
+!
+interface GigabitEthernet0/0.50
+ encapsulation dot1Q 50
+ ip address 192.168.86.2 255.255.255.252
+!
+interface GigabitEthernet0/0.60
+ encapsulation dot1Q 60
+ ip vrf forwarding group2
+ ip address 192.168.86.6 255.255.255.252
+!
+interface GigabitEthernet0/1
+ no ip address
+ duplex auto
+ speed auto
+ media-type rj45
+!
+interface GigabitEthernet0/1.50
+ encapsulation dot1Q 50
+ ip address 192.168.86.18 255.255.255.252
+!
+interface GigabitEthernet0/1.60
+ encapsulation dot1Q 60
+ ip vrf forwarding group2
+ ip address 192.168.86.22 255.255.255.252
+!
+interface Serial0/2/0
+ ip address 192.168.86.81 255.255.255.252
+ ip ospf cost 1
+ no fair-queue
+ clock rate 2000000
+!
+interface Serial0/2/1
+ ip vrf forwarding group2
+ ip address 192.168.86.85 255.255.255.252
+!
+interface Serial0/3/0
+ no ip address
+ shutdown
+ clock rate 2000000
+!
+interface Serial0/3/1
+ no ip address
+ shutdown
+ clock rate 2000000
+!
+interface FastEthernet2/0
+ no ip address
+ duplex auto
+ speed auto
+!
+interface FastEthernet2/0.50
+ encapsulation dot1Q 50
+ ip address 192.168.86.34 255.255.255.252
+!
+interface FastEthernet2/0.60
+ encapsulation dot1Q 60
+ ip vrf forwarding group2
+ ip address 192.168.86.38 255.255.255.252
+!
+interface FastEthernet2/1
+ no ip address
+ duplex auto
+ speed auto
+!
+interface FastEthernet2/1.10
+ encapsulation dot1Q 10
+ ip address 192.168.86.49 255.255.255.252
+ ip ospf cost 100
+!
+interface FastEthernet2/1.20
+ encapsulation dot1Q 20
+ ip vrf forwarding group2
+ ip address 192.168.86.53 255.255.255.252
+!
+!
+router eigrp 1
+ !
+ address-family ipv4 vrf group2 autonomous-system 1
+  network 192.168.86.0
+ exit-address-family
+!
+router ospf 1
+ router-id 4.4.4.4
+ network 4.4.4.4 0.0.0.0 area 0
+ network 192.168.86.0 0.0.0.255 area 0
+!
+ip forward-protocol nd
+!
+!
+no ip http server
+no ip http secure-server
+!
+!
+!
+!
+!
+!
+!
+control-plane
+!
+!
+!
+!
+mgcp profile default
+!
+!
+!
+!
+!
+!
+line con 0
+line aux 0
+line vty 0 4
+ login local
+ transport input ssh
+line vty 5 15
+ login local
+ transport input ssh
+!
+scheduler allocate 20000 1000
+end

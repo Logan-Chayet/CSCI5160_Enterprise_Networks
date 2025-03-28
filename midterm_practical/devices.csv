@@ -1,0 +1,12 @@
+hostname,device_type,ip,username,password
+LEO,cisco_ios,1.1.1.1,admin,admin
+MEO,cisco_ios,2.2.2.2,admin,admin
+GTO,cisco_ios,3.3.3.3,admin,admin
+Moon,cisco_ios,4.4.4.4,admin,admin
+ISS,cisco_ios,5.5.5.5,admin,admin
+Apollo,cisco_ios,7.7.7.7,admin,admin
+OneWeb,cisco_ios,8.8.8.8,admin,admin
+NASA,cisco_ios,9.9.9.9,admin,admin
+Boring,cisco_ios,192.168.0.10,admin,admin
+PiPal,cisco_ios,192.168.0.12,admin,admin
+SolarCity,cisco_ios,192.168.0.13,admin,admin

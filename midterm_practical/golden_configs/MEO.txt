@@ -1,0 +1,316 @@
+!
+version 12.2
+no service pad
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+!
+hostname MEO
+!
+boot-start-marker
+boot-end-marker
+!
+!
+username admin privilege 15 secret 5 $1$tD..$HL6m1EDx8tM4ikYDBqboA1
+!
+!
+no aaa new-model
+switch 1 provision ws-c3750-48ts
+system mtu routing 1500
+vtp domain S25_midterm
+vtp mode transparent
+!
+track 1 interface FastEthernet1/0/3 line-protocol
+!
+track 2 interface FastEthernet1/0/2 line-protocol
+ip routing
+ip domain-name meo.com
+ip dhcp excluded-address vrf group2 192.168.84.0 192.168.84.20
+!
+ip dhcp pool Neuralink
+   vrf group2
+   network 192.168.84.0 255.255.254.0
+   default-router 192.168.84.1 
+   dns-server 5.5.5.5 
+!
+!
+ip vrf group2
+!
+!
+!
+crypto pki trustpoint TP-self-signed-1170402432
+ enrollment selfsigned
+ subject-name cn=IOS-Self-Signed-Certificate-1170402432
+ revocation-check none
+ rsakeypair TP-self-signed-1170402432
+!
+!
+crypto pki certificate chain TP-self-signed-1170402432
+ certificate self-signed 01
+  3082023C 308201A5 A0030201 02020101 300D0609 2A864886 F70D0101 04050030 
+  31312F30 2D060355 04031326 494F532D 53656C66 2D536967 6E65642D 43657274 
+  69666963 6174652D 31313730 34303234 3332301E 170D3933 30333031 30303031 
+  33385A17 0D323030 31303130 30303030 305A3031 312F302D 06035504 03132649 
+  4F532D53 656C662D 5369676E 65642D43 65727469 66696361 74652D31 31373034 
+  30323433 3230819F 300D0609 2A864886 F70D0101 01050003 818D0030 81890281 
+  8100C4BD A569240E 045DB17F DD2C6F95 D289ED73 8AA6EE27 E5B2D0FE E0EF9737 
+  B5CA1FBE D9E3CC30 1053CBFA 87DFEAD4 245139BD 5F23D47B 5A9DA878 A3CD270B 
+  D056E1AF C7700C42 85EFE345 7BE21F46 E7415980 86279F77 BCE5DC32 E76F2436 
+  14546514 F890631A E047E374 46A2CE59 2475B91D 77D59C4F 2BF560E9 339D42BC 
+  97650203 010001A3 64306230 0F060355 1D130101 FF040530 030101FF 300F0603 
+  551D1104 08300682 044D454F 2E301F06 03551D23 04183016 8014A328 4E75F4E7 
+  492C22EF 30C1EA46 4894FC40 64A1301D 0603551D 0E041604 14A3284E 75F4E749 
+  2C22EF30 C1EA4648 94FC4064 A1300D06 092A8648 86F70D01 01040500 03818100 
+  4DBD298C 762030D5 11059537 154CD57B 62F3EAC3 56FFDC1E 7DCEC9BA B336DD0D 
+  DAF9D59A D1150655 20D492D4 DF31B1C5 B73BD9C2 C2B1F9A6 B25A0813 42064AD4 
+  062A60E5 301F77D5 D43B11AC 098FC68A 2648B07F E0148521 62C36514 616B2518 
+  78C63FCC 6888B57E 24CA37E8 C06D980E 5370CF03 BB5E7553 93D5064C D0599A04
+  quit
+!
+!
+!
+!
+spanning-tree mode pvst
+spanning-tree extend system-id
+spanning-tree vlan 40 priority 20480
+!
+vlan internal allocation policy ascending
+!
+vlan 10
+ name SpaceX
+!
+vlan 20
+ name Tesla
+!
+vlan 30
+ name X.com
+!
+vlan 40
+ name Nueralink
+!
+vlan 50
+ name group1_moon
+!
+vlan 60
+ name group2_moon
+!
+vlan 70
+ name group1_iss
+!
+vlan 80
+ name group2_iss
+!
+ip ssh version 2
+!
+!
+!
+interface Loopback0
+ ip address 2.2.2.2 255.255.255.255
+!
+interface FastEthernet1/0/1
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+!
+interface FastEthernet1/0/2
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+!
+interface FastEthernet1/0/3
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+!
+interface FastEthernet1/0/4
+!
+interface FastEthernet1/0/5
+!
+interface FastEthernet1/0/6
+!
+interface FastEthernet1/0/7
+!
+interface FastEthernet1/0/8
+!
+interface FastEthernet1/0/9
+!
+interface FastEthernet1/0/10
+!
+interface FastEthernet1/0/11
+!
+interface FastEthernet1/0/12
+!
+interface FastEthernet1/0/13
+!
+interface FastEthernet1/0/14
+!
+interface FastEthernet1/0/15
+!
+interface FastEthernet1/0/16
+!
+interface FastEthernet1/0/17
+!
+interface FastEthernet1/0/18
+!
+interface FastEthernet1/0/19
+!
+interface FastEthernet1/0/20
+!
+interface FastEthernet1/0/21
+ switchport access vlan 10
+!
+interface FastEthernet1/0/22
+ switchport access vlan 20
+!
+interface FastEthernet1/0/23
+ switchport access vlan 30
+!
+interface FastEthernet1/0/24
+ switchport access vlan 40
+!
+interface FastEthernet1/0/25
+!
+interface FastEthernet1/0/26
+!
+interface FastEthernet1/0/27
+!
+interface FastEthernet1/0/28
+!
+interface FastEthernet1/0/29
+!
+interface FastEthernet1/0/30
+!
+interface FastEthernet1/0/31
+!
+interface FastEthernet1/0/32
+!
+interface FastEthernet1/0/33
+!
+interface FastEthernet1/0/34
+!
+interface FastEthernet1/0/35
+!
+interface FastEthernet1/0/36
+!
+interface FastEthernet1/0/37
+!
+interface FastEthernet1/0/38
+!
+interface FastEthernet1/0/39
+!
+interface FastEthernet1/0/40
+!
+interface FastEthernet1/0/41
+!
+interface FastEthernet1/0/42
+!
+interface FastEthernet1/0/43
+!
+interface FastEthernet1/0/44
+!
+interface FastEthernet1/0/45
+!
+interface FastEthernet1/0/46
+!
+interface FastEthernet1/0/47
+!
+interface FastEthernet1/0/48
+!
+interface GigabitEthernet1/0/1
+!
+interface GigabitEthernet1/0/2
+!
+interface GigabitEthernet1/0/3
+!
+interface GigabitEthernet1/0/4
+!
+interface Vlan1
+ no ip address
+ shutdown
+!
+interface Vlan10
+ ip address 192.168.0.3 255.255.192.0
+ standby 10 ip 192.168.0.1
+ standby 10 priority 90
+ standby 10 preempt
+ standby 10 track 1 decrement 20
+ standby 10 track 2 decrement 20
+!
+interface Vlan20
+ ip address 192.168.64.3 255.255.240.0
+ standby 20 ip 192.168.64.1
+ standby 20 preempt
+ standby 20 track 1 decrement 20
+ standby 20 track 2 decrement 20
+!
+interface Vlan30
+ ip vrf forwarding group2
+ ip address 192.168.80.3 255.255.252.0
+ ip helper-address 9.9.9.9
+ standby 30 ip 192.168.80.1
+ standby 30 priority 110
+ standby 30 preempt
+ standby 30 track 1 decrement 20
+ standby 30 track 2 decrement 20
+!
+interface Vlan40
+ ip vrf forwarding group2
+ ip address 192.168.84.3 255.255.254.0
+ standby 40 ip 192.168.84.1
+ standby 40 priority 110
+ standby 40 preempt
+ standby 40 track 1 decrement 20
+ standby 40 track 2 decrement 20
+!
+interface Vlan50
+ ip address 192.168.86.17 255.255.255.252
+ ip ospf cost 1
+!
+interface Vlan60
+ ip vrf forwarding group2
+ ip address 192.168.86.21 255.255.255.252
+ delay 10000
+!
+interface Vlan70
+ ip address 192.168.86.25 255.255.255.252
+ ip ospf cost 50
+!
+interface Vlan80
+ ip vrf forwarding group2
+ ip address 192.168.86.29 255.255.255.252
+!
+!
+router eigrp 1
+ !
+ address-family ipv4 vrf group2 autonomous-system 1
+  network 192.168.80.0 0.0.3.255
+  network 192.168.84.0 0.0.1.255
+  network 192.168.86.0
+  passive-interface Vlan30
+  passive-interface Vlan40
+ exit-address-family
+!
+router ospf 1
+ router-id 2.2.2.2
+ log-adjacency-changes
+ passive-interface Vlan10
+ passive-interface Vlan20
+ network 2.2.2.2 0.0.0.0 area 0
+ network 192.168.0.0 0.0.63.255 area 0
+ network 192.168.64.0 0.0.15.255 area 0
+ network 192.168.86.0 0.0.0.255 area 0
+!
+ip classless
+ip http server
+ip http secure-server
+!
+!
+!
+!
+!
+line con 0
+line vty 0 4
+ login local
+ transport input ssh
+line vty 5 15
+ login local
+ transport input ssh
+!
+end

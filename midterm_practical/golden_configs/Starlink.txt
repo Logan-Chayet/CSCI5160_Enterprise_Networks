@@ -1,0 +1,255 @@
+Starlink#show run
+Building configuration...
+
+Current configuration : 3734 bytes
+!
+! Last configuration change at 06:00:20 UTC Fri Jan 6 2006
+! NVRAM config last updated at 07:26:32 UTC Thu Jan 5 2006
+! NVRAM config last updated at 07:26:32 UTC Thu Jan 5 2006
+version 15.1
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+!
+hostname Starlink
+!
+boot-start-marker
+boot-end-marker
+!
+!
+!
+no aaa new-model
+!
+crypto pki token default removal timeout 0
+!
+!
+dot11 syslog
+!
+dot11 ssid Logan_SpaceX
+ vlan 10
+ authentication open
+ authentication key-management wpa
+ guest-mode
+ wpa-psk ascii 0 password
+!
+dot11 ssid Logan_Tesla
+ vlan 20
+ authentication open
+ guest-mode
+!
+ip source-route
+!
+!
+ip dhcp excluded-address 192.168.0.1 192.168.0.20
+!
+ip dhcp pool SpaceX
+ network 192.168.0.0 255.255.192.0
+ default-router 192.168.0.1
+ dns-server 5.5.5.5
+!
+!
+!
+ip cef
+ip domain name PiPal.com
+no ipv6 cef
+!
+multilink bundle-name authenticated
+!
+!
+!
+license udi pid CISCO1811W-AG-A/K9 sn FTX1035Z0RB
+!
+spanning-tree vlan 10 priority 16384
+spanning-tree vlan 20 priority 16384
+spanning-tree vlan 30 priority 16384
+spanning-tree vlan 40 priority 36864
+vtp domain S25_midterm
+vtp mode transparent
+username admin secret 5 $1$CmGX$l1hK0f2DTiZQdQEUXOlZS0
+!
+!
+vlan 2
+ name wired1
+!
+vlan 4
+ name wireless1
+!
+vlan 5
+ name DR_NO
+!
+vlan 6
+ name Blofeld
+!
+vlan 7
+ name BOND
+!
+vlan 8
+ name M
+!
+vlan 10
+ name SpaceX
+!
+vlan 20
+ name Tesla
+!
+vlan 30
+ name X.com
+!
+vlan 40
+ name Nueralink
+!
+vlan 50
+ name onewebU
+!
+vlan 60
+ name azureu
+!
+vlan 85
+!
+vlan 1004
+ bridge 0
+ stp type ieee
+!
+ip ssh version 2
+!
+!
+!
+bridge irb
+!
+!
+!
+!
+interface Dot11Radio0
+ no ip address
+ !
+ encryption vlan 10 mode ciphers aes-ccm
+ !
+ ssid Logan_SpaceX
+ !
+ speed basic-1.0 basic-2.0 basic-5.5 6.0 9.0 basic-11.0 12.0 18.0 24.0 36.0 48.0 54.0
+ station-role root
+!
+interface Dot11Radio0.10
+ encapsulation dot1Q 10
+ bridge-group 10
+ bridge-group 10 subscriber-loop-control
+ bridge-group 10 block-unknown-source
+ no bridge-group 10 source-learning
+ no bridge-group 10 unicast-flooding
+!
+interface Dot11Radio1
+ no ip address
+ !
+ ssid Logan_Tesla
+ !
+ speed basic-6.0 9.0 basic-12.0 18.0 basic-24.0 36.0 48.0 54.0
+ station-role root
+!
+interface Dot11Radio1.20
+ encapsulation dot1Q 20
+ bridge-group 20
+ bridge-group 20 subscriber-loop-control
+ bridge-group 20 block-unknown-source
+ no bridge-group 20 source-learning
+ no bridge-group 20 unicast-flooding
+!
+interface FastEthernet0
+ no ip address
+ shutdown
+ duplex auto
+ speed auto
+!
+interface FastEthernet1
+ no ip address
+ shutdown
+ duplex auto
+ speed auto
+!
+interface FastEthernet2
+ switchport mode trunk
+ no ip address
+!
+interface FastEthernet3
+ switchport mode trunk
+ no ip address
+!
+interface FastEthernet4
+ switchport mode trunk
+ no ip address
+ spanning-tree vlan 40 port-priority 16
+ spanning-tree vlan 40 cost 1
+!
+interface FastEthernet5
+ no ip address
+!
+interface FastEthernet6
+ no ip address
+!
+interface FastEthernet7
+ no ip address
+!
+interface FastEthernet8
+ no ip address
+!
+interface FastEthernet9
+ no ip address
+!
+interface Vlan1
+ no ip address
+!
+interface Vlan10
+ no ip address
+ bridge-group 10
+!
+interface Vlan20
+ no ip address
+ bridge-group 20
+!
+interface Vlan30
+ ip address 192.168.80.11 255.255.252.0
+!
+interface Async1
+ no ip address
+ encapsulation slip
+!
+interface BVI10
+ ip address 192.168.0.5 255.255.192.0
+!
+interface BVI20
+ ip address 192.168.64.5 255.255.240.0
+!
+ip forward-protocol nd
+no ip http server
+no ip http secure-server
+!
+!
+!
+!
+!
+!
+!
+!
+!
+control-plane
+!
+bridge 10 protocol ieee
+bridge 10 route ip
+bridge 20 protocol ieee
+bridge 20 route ip
+!
+!
+line con 0
+line 1
+ modem InOut
+ stopbits 1
+ speed 115200
+ flowcontrol hardware
+line aux 0
+line vty 0 4
+ login local
+ transport input ssh
+line vty 5 15
+ login local
+ transport input ssh
+!
+end

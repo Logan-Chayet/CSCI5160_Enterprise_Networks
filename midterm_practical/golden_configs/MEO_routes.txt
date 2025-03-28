@@ -1,0 +1,58 @@
+Codes: C - connected, S - static, R - RIP, M - mobile, B - BGP
+       D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area 
+       N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2
+       E1 - OSPF external type 1, E2 - OSPF external type 2
+       i - IS-IS, su - IS-IS summary, L1 - IS-IS level-1, L2 - IS-IS level-2
+       ia - IS-IS inter area, * - candidate default, U - per-user static route
+       o - ODR, P - periodic downloaded static route
+
+Gateway of last resort is 192.168.86.18 to network 0.0.0.0
+
+     1.0.0.0/32 is subnetted, 1 subnets
+O       1.1.1.1 [110/3] via 192.168.86.18, 1d21h, Vlan50
+     2.0.0.0/32 is subnetted, 1 subnets
+C       2.2.2.2 is directly connected, Loopback0
+     3.0.0.0/32 is subnetted, 1 subnets
+O       3.3.3.3 [110/3] via 192.168.86.18, 1d21h, Vlan50
+     4.0.0.0/32 is subnetted, 1 subnets
+O       4.4.4.4 [110/2] via 192.168.86.18, 1d21h, Vlan50
+     5.0.0.0/32 is subnetted, 1 subnets
+O       5.5.5.5 [110/6] via 192.168.86.18, 1d21h, Vlan50
+     7.0.0.0/32 is subnetted, 1 subnets
+O       7.7.7.7 [110/4] via 192.168.86.18, 1d21h, Vlan50
+     8.0.0.0/32 is subnetted, 1 subnets
+O       8.8.8.8 [110/3] via 192.168.86.18, 1d21h, Vlan50
+     9.0.0.0/32 is subnetted, 1 subnets
+O E2    9.9.9.9 [110/20] via 192.168.86.18, 1d21h, Vlan50
+     192.168.86.0/30 is subnetted, 26 subnets
+O E2    192.168.86.60 [110/20] via 192.168.86.18, 1d21h, Vlan50
+O       192.168.86.56 [110/5] via 192.168.86.18, 1d21h, Vlan50
+O E2    192.168.86.52 [110/20] via 192.168.86.18, 1d21h, Vlan50
+O       192.168.86.48 [110/4] via 192.168.86.18, 1d21h, Vlan50
+O E2    192.168.86.44 [110/20] via 192.168.86.18, 1d21h, Vlan50
+O       192.168.86.40 [110/6] via 192.168.86.18, 1d21h, Vlan50
+O E2    192.168.86.36 [110/20] via 192.168.86.18, 1d21h, Vlan50
+O       192.168.86.32 [110/2] via 192.168.86.18, 1d21h, Vlan50
+O E2    192.168.86.28 [110/20] via 192.168.86.18, 1d21h, Vlan50
+C       192.168.86.24 is directly connected, Vlan70
+O E2    192.168.86.20 [110/20] via 192.168.86.18, 1d21h, Vlan50
+C       192.168.86.16 is directly connected, Vlan50
+O E2    192.168.86.12 [110/20] via 192.168.86.18, 1d21h, Vlan50
+O       192.168.86.8 [110/6] via 192.168.86.18, 1d21h, Vlan50
+O E2    192.168.86.4 [110/20] via 192.168.86.18, 1d21h, Vlan50
+O       192.168.86.0 [110/2] via 192.168.86.18, 1d21h, Vlan50
+O       192.168.86.100 [110/5] via 192.168.86.18, 1d21h, Vlan50
+O       192.168.86.96 [110/4] via 192.168.86.18, 1d21h, Vlan50
+O E2    192.168.86.92 [110/20] via 192.168.86.18, 1d21h, Vlan50
+O       192.168.86.88 [110/66] via 192.168.86.18, 1d21h, Vlan50
+O E2    192.168.86.84 [110/20] via 192.168.86.18, 1d21h, Vlan50
+O       192.168.86.80 [110/2] via 192.168.86.18, 1d21h, Vlan50
+O E2    192.168.86.76 [110/20] via 192.168.86.18, 1d21h, Vlan50
+O       192.168.86.72 [110/4] via 192.168.86.18, 1d21h, Vlan50
+O E2    192.168.86.68 [110/20] via 192.168.86.18, 1d21h, Vlan50
+O       192.168.86.64 [110/3] via 192.168.86.18, 1d21h, Vlan50
+O*E1 0.0.0.0/0 [110/1003] via 192.168.86.18, 1d01h, Vlan50
+C    192.168.64.0/20 is directly connected, Vlan20
+O E2 192.168.80.0/22 [110/20] via 192.168.86.18, 1d21h, Vlan50
+C    192.168.0.0/18 is directly connected, Vlan10
+O E2 192.168.84.0/23 [110/20] via 192.168.86.18, 1d21h, Vlan50

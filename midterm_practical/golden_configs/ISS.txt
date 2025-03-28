@@ -1,0 +1,220 @@
+!
+
+version 15.1
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+!
+hostname ISS
+!
+boot-start-marker
+boot-end-marker
+!
+!
+!
+no aaa new-model
+!
+no network-clock-participate slot 2 
+!
+dot11 syslog
+ip source-route
+!
+!
+!
+ip vrf group2
+!
+ip cef
+!
+!
+ip domain name iss.com
+ip host ELON 77.77.77.77
+ip host elon.com 6.6.6.6
+ip host nasa.com 9.9.9.9
+no ipv6 cef
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+voice-card 0
+!
+!
+!
+!
+!
+!
+!
+crypto pki token default removal timeout 0
+!
+!
+!
+!
+license udi pid CISCO3825 sn FTX1102A3QV
+username admin privilege 15 secret 5 $1$iqwe$ahF9ihqQTAdRUL6nSjwtP0
+!
+redundancy
+!
+!
+ip ssh version 2
+! 
+!
+!
+!
+!
+!
+!
+!
+interface Loopback0
+ ip address 5.5.5.5 255.255.255.255
+!
+interface GigabitEthernet0/0
+ no ip address
+ duplex auto
+ speed auto
+ media-type rj45
+!
+interface GigabitEthernet0/0.70
+ encapsulation dot1Q 70
+ ip address 192.168.86.10 255.255.255.252
+!
+interface GigabitEthernet0/0.80
+ encapsulation dot1Q 80
+ ip vrf forwarding group2
+ ip address 192.168.86.14 255.255.255.252
+!
+interface GigabitEthernet0/1
+ no ip address
+ duplex auto
+ speed auto
+ media-type rj45
+!
+interface GigabitEthernet0/1.70
+ encapsulation dot1Q 70
+ ip address 192.168.86.26 255.255.255.252
+!
+interface GigabitEthernet0/1.80
+ encapsulation dot1Q 80
+ ip vrf forwarding group2
+ ip address 192.168.86.30 255.255.255.252
+!
+interface Serial0/0/0
+ no ip address
+ shutdown
+ clock rate 2000000
+!
+interface Serial0/0/1
+ no ip address
+ shutdown
+ clock rate 2000000
+!
+interface Serial0/1/0
+ no ip address
+ shutdown
+ clock rate 2000000
+!
+interface Serial0/1/1
+ no ip address
+ shutdown
+ clock rate 2000000
+!
+interface Serial0/2/0
+ no ip address
+ shutdown
+ clock rate 2000000
+!
+interface Serial0/2/1
+ no ip address
+ shutdown
+ clock rate 2000000
+!
+interface Serial0/3/0
+ ip address 192.168.86.89 255.255.255.252
+ clock rate 2000000
+!
+interface Serial0/3/1
+ ip vrf forwarding group2
+ ip address 192.168.86.93 255.255.255.252
+ clock rate 2000000
+!
+interface FastEthernet2/0
+ no ip address
+ duplex auto
+ speed auto
+!
+interface FastEthernet2/0.20
+ delay 10000000
+!
+interface FastEthernet2/0.70
+ encapsulation dot1Q 70
+ ip address 192.168.86.42 255.255.255.252
+!
+interface FastEthernet2/0.80
+ encapsulation dot1Q 80
+ ip vrf forwarding group2
+ ip address 192.168.86.46 255.255.255.252
+!
+interface FastEthernet2/1
+ no ip address
+ duplex auto
+ speed auto
+!
+interface FastEthernet2/1.10
+ encapsulation dot1Q 10
+ ip address 192.168.86.57 255.255.255.252
+!
+interface FastEthernet2/1.20
+ bandwidth 10000
+ encapsulation dot1Q 20
+ ip vrf forwarding group2
+ ip address 192.168.86.61 255.255.255.252
+ delay 10000
+!
+!
+router eigrp 1
+ !
+ address-family ipv4 vrf group2 autonomous-system 1
+  network 192.168.86.0
+ exit-address-family
+!
+router ospf 1
+ router-id 5.5.5.5
+ network 5.5.5.5 0.0.0.0 area 0
+ network 192.168.86.0 0.0.0.255 area 0
+!
+ip forward-protocol nd
+!
+!
+no ip http server
+no ip http secure-server
+ip dns server
+!
+!
+!
+!
+!
+!
+!
+control-plane
+!
+!
+!
+!
+mgcp profile default
+!
+!
+!
+!
+!
+!
+line con 0
+line aux 0
+line vty 0 4
+ login local
+ transport input ssh
+line vty 5 15
+ login local
+ transport input ssh
+!
+scheduler allocate 20000 1000
+end
