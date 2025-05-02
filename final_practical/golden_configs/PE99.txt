@@ -1,0 +1,230 @@
+PE99#show run
+Building configuration...
+
+
+Current configuration : 3649 bytes
+!
+! Last configuration change at 18:44:26 UTC Fri May 2 2025
+version 15.1
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+!
+hostname PE99
+!
+boot-start-marker
+boot-end-marker
+!
+!
+!
+no aaa new-model
+!
+no network-clock-participate slot 2
+!
+dot11 syslog
+ip source-route
+!
+ip cef
+!
+!
+!
+!
+ipv6 unicast-routing
+ipv6 cef
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+mpls traffic-eng tunnels
+!
+voice-card 0
+!
+!
+!
+!
+!
+!
+!
+crypto pki token default removal timeout 0
+!
+!
+!
+!
+license udi pid CISCO3825 sn FTX1241A341
+!
+redundancy
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface Loopback0
+ ip address 1.0.0.99 255.255.255.255
+!
+interface Loopback1
+ ip address 8.8.8.8 255.255.255.255
+!
+interface Loopback10
+ no ip address
+ ipv6 address 2001:4860:4860::8888/128
+ ipv6 enable
+ ipv6 ospf 1 area 0
+!
+interface Loopback222
+ no ip address
+ ipv6 address 2::2/64
+ ipv6 enable
+ ipv6 ospf 1 area 0
+!
+interface Tunnel1
+ ip unnumbered Loopback0
+ tunnel mode mpls traffic-eng
+ tunnel destination 1.0.0.101
+ tunnel mpls traffic-eng autoroute announce
+ tunnel mpls traffic-eng priority 7 7
+ tunnel mpls traffic-eng bandwidth 3000
+ tunnel mpls traffic-eng path-option 1 dynamic
+ no routing dynamic
+!
+interface Tunnel2
+ ip unnumbered Loopback0
+ tunnel mode mpls traffic-eng
+ tunnel destination 1.0.0.102
+ tunnel mpls traffic-eng autoroute announce
+ tunnel mpls traffic-eng priority 7 7
+ tunnel mpls traffic-eng bandwidth 3000
+ tunnel mpls traffic-eng path-option 1 dynamic
+ no routing dynamic
+!
+interface Tunnel3
+ ip unnumbered Loopback0
+ tunnel mode mpls traffic-eng
+ tunnel destination 1.0.0.103
+ tunnel mpls traffic-eng autoroute announce
+ tunnel mpls traffic-eng priority 7 7
+ tunnel mpls traffic-eng bandwidth 3000
+ tunnel mpls traffic-eng path-option 1 dynamic
+ no routing dynamic
+!
+interface Tunnel4
+ ip unnumbered Loopback0
+ tunnel mode mpls traffic-eng
+ tunnel destination 1.0.0.105
+ tunnel mpls traffic-eng autoroute announce
+ tunnel mpls traffic-eng priority 7 7
+ tunnel mpls traffic-eng bandwidth 3000
+ tunnel mpls traffic-eng path-option 1 dynamic
+ no routing dynamic
+!
+interface Tunnel5
+ no ip address
+ ipv6 address 2001:A3FF::13/127
+ ipv6 enable
+ ipv6 mtu 1400
+ ipv6 ospf 1 area 0
+ tunnel source 1.0.0.99
+ tunnel destination 110.0.0.2
+!
+interface GigabitEthernet0/0
+ ip address 172.20.1.46 255.255.255.252
+ duplex auto
+ speed auto
+ media-type rj45
+ mpls traffic-eng tunnels
+ ip rsvp bandwidth 100000 50000
+!
+interface GigabitEthernet0/1
+ no ip address
+ shutdown
+ duplex auto
+ speed auto
+ media-type rj45
+!
+interface Serial0/2/0
+ no ip address
+ shutdown
+ no fair-queue
+ clock rate 2000000
+!
+interface Serial0/2/1
+ no ip address
+ shutdown
+ clock rate 2000000
+!
+interface Serial0/3/0
+ no ip address
+ shutdown
+ clock rate 2000000
+!
+interface Serial0/3/1
+ no ip address
+ shutdown
+ clock rate 2000000
+!
+interface FastEthernet2/0
+ no ip address
+ shutdown
+ duplex auto
+ speed auto
+!
+interface FastEthernet2/1
+ no ip address
+ shutdown
+ duplex auto
+ speed auto
+!
+router ospf 1
+ mpls ldp autoconfig
+ mpls traffic-eng router-id Loopback0
+ mpls traffic-eng area 0
+ router-id 1.0.0.99
+ network 1.0.0.99 0.0.0.0 area 0
+ network 172.20.1.0 0.0.0.255 area 0
+ default-information originate
+!
+ip forward-protocol nd
+no ip http server
+no ip http secure-server
+!
+!
+ip route 110.0.0.0 255.255.255.0 Tunnel1
+ip route 120.0.0.0 255.255.255.0 Tunnel2
+ip route 130.0.0.0 255.255.255.0 Tunnel3
+ip route 140.0.0.0 255.255.255.0 Tunnel4
+!
+ipv6 router ospf 1
+ router-id 99.99.99.99
+!
+!
+!
+!
+!
+!
+!
+control-plane
+!
+!
+!
+!
+mgcp profile default
+!
+!
+!
+!
+!
+!
+line con 0
+line aux 0
+line vty 0 4
+ login
+ transport input all
+!
+scheduler allocate 20000 1000
+end

@@ -1,0 +1,269 @@
+PE2#show run
+Building configuration...
+
+
+Current configuration : 5061 bytes
+!
+! Last configuration change at 22:10:50 UTC Thu May 1 2025
+version 15.1
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+!
+hostname PE2
+!
+boot-start-marker
+boot-end-marker
+!
+!
+!
+no aaa new-model
+!
+no network-clock-participate slot 1
+!
+dot11 syslog
+ip source-route
+!
+!
+!
+ip cef
+!
+!
+no ipv6 cef
+!
+multilink bundle-name authenticated
+!
+!
+!
+mpls traffic-eng tunnels
+mpls traffic-eng reoptimize timers frequency 10
+!
+voice-card 0
+!
+!
+!
+!
+!
+!
+!
+crypto pki token default removal timeout 0
+!
+!
+!
+!
+license udi pid CISCO3825 sn FTX1241A3FE
+!
+redundancy
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface Loopback0
+ ip address 1.0.0.102 255.255.255.255
+!
+interface Tunnel1
+ ip unnumbered Loopback0
+ tunnel mode mpls traffic-eng
+ tunnel destination 1.0.0.101
+ tunnel mpls traffic-eng autoroute announce
+ tunnel mpls traffic-eng priority 7 7
+ tunnel mpls traffic-eng bandwidth 300
+ tunnel mpls traffic-eng path-option 1 explicit name PE2_PE1 lockdown
+ tunnel mpls traffic-eng path-option 2 explicit name PE2_PE1_backup
+ no routing dynamic
+!
+interface Tunnel2
+ ip unnumbered Loopback0
+ tunnel mode mpls traffic-eng
+ tunnel destination 1.0.0.104
+ tunnel mpls traffic-eng autoroute announce
+ tunnel mpls traffic-eng priority 7 7
+ tunnel mpls traffic-eng bandwidth 300
+ tunnel mpls traffic-eng path-option 1 explicit name PE2_PE4 lockdown
+ tunnel mpls traffic-eng path-option 2 dynamic
+ no routing dynamic
+!
+interface Tunnel3
+ ip unnumbered Loopback0
+ tunnel mode mpls traffic-eng
+ tunnel destination 1.0.0.105
+ tunnel mpls traffic-eng autoroute announce
+ tunnel mpls traffic-eng priority 7 7
+ tunnel mpls traffic-eng bandwidth 300
+ tunnel mpls traffic-eng path-option 1 explicit name PE2_PE5 lockdown
+ tunnel mpls traffic-eng path-option 2 dynamic
+ no routing dynamic
+!
+interface Tunnel4
+ ip unnumbered Loopback0
+ tunnel mode mpls traffic-eng
+ tunnel destination 1.0.0.103
+ tunnel mpls traffic-eng autoroute announce
+ tunnel mpls traffic-eng priority 7 7
+ tunnel mpls traffic-eng bandwidth 300
+ tunnel mpls traffic-eng path-option 1 dynamic
+ no routing dynamic
+!
+interface Tunnel5
+ ip unnumbered Loopback0
+ tunnel mode mpls traffic-eng
+ tunnel destination 1.0.0.99
+ tunnel mpls traffic-eng autoroute announce
+ tunnel mpls traffic-eng priority 7 7
+ tunnel mpls traffic-eng bandwidth 3000
+ tunnel mpls traffic-eng path-option 1 dynamic
+ no routing dynamic
+!
+interface GigabitEthernet0/0
+ ip address 172.20.1.34 255.255.255.252
+ duplex auto
+ speed auto
+ media-type rj45
+ mpls traffic-eng tunnels
+ ip rsvp bandwidth 100000 50000
+!
+interface GigabitEthernet0/1
+ ip address 120.0.0.1 255.255.255.0
+ duplex auto
+ speed auto
+ media-type rj45
+!
+interface FastEthernet1/0
+ no ip address
+ duplex auto
+ speed auto
+!
+interface FastEthernet1/0.10
+ encapsulation dot1Q 10
+ ip address 172.20.1.54 255.255.255.252
+ mpls traffic-eng tunnels
+ ip rsvp bandwidth 100000 50000
+!
+interface FastEthernet1/0.50
+ encapsulation dot1Q 50
+ ip address 172.20.1.69 255.255.255.252
+ ip ospf cost 10000
+ mpls traffic-eng tunnels
+ ip rsvp bandwidth 100000 50000
+!
+interface FastEthernet1/0.60
+ encapsulation dot1Q 60
+ ip address 172.20.1.73 255.255.255.252
+ ip ospf cost 10000
+ mpls traffic-eng tunnels
+ ip rsvp bandwidth 100000 50000
+!
+interface FastEthernet1/0.70
+ encapsulation dot1Q 70
+ ip address 172.20.1.77 255.255.255.252
+ ip ospf cost 10000
+ mpls traffic-eng tunnels
+ ip rsvp bandwidth 100000 50000
+!
+interface FastEthernet1/1
+ no ip address
+ shutdown
+ duplex auto
+ speed auto
+!
+interface Serial2/0
+ no ip address
+ shutdown
+ no fair-queue
+ serial restart-delay 0
+!
+interface Serial2/1
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+interface Serial2/2
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+interface Serial2/3
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+router ospf 1
+ mpls ldp autoconfig
+ mpls traffic-eng router-id Loopback0
+ mpls traffic-eng area 0
+ router-id 1.0.0.102
+ redistribute connected
+ network 1.0.0.102 0.0.0.0 area 0
+ network 172.20.1.0 0.0.0.255 area 0
+!
+ip forward-protocol nd
+!
+!
+no ip http server
+no ip http secure-server
+ip route 0.0.0.0 0.0.0.0 Tunnel5
+ip route 3.3.3.3 255.255.255.255 Tunnel3
+ip route 3.3.3.3 255.255.255.255 Tunnel4
+ip route 110.0.0.0 255.255.255.0 Tunnel1
+ip route 130.0.0.0 255.255.255.0 Tunnel4
+ip route 140.0.0.0 255.255.255.0 Tunnel3
+!
+ip explicit-path name PE2_PE1 enable
+ next-address 1.0.0.2
+ next-address 1.0.0.5
+ next-address 1.0.0.3
+ next-address 1.0.0.1
+ next-address 1.0.0.101
+!
+ip explicit-path name PE2_PE1_backup enable
+ next-address 1.0.0.2
+ next-address 1.0.0.4
+ next-address 1.0.0.5
+ next-address 1.0.0.1
+ next-address 1.0.0.101
+!
+ip explicit-path name PE2_PE4 enable
+ next-address 1.0.0.2
+ next-address 1.0.0.5
+ next-address 1.0.0.1
+ next-address 1.0.0.3
+ next-address 1.0.0.104
+!
+ip explicit-path name PE2_PE5 enable
+ next-address 1.0.0.2
+ next-address 1.0.0.5
+ next-address 1.0.0.4
+ next-address 1.0.0.105
+!
+!
+!
+!
+!
+!
+!
+control-plane
+!
+!
+!
+!
+mgcp profile default
+!
+!
+!
+!
+!
+!
+line con 0
+line aux 0
+line vty 0 4
+ login
+ transport input all
+!
+scheduler allocate 20000 1000
+end

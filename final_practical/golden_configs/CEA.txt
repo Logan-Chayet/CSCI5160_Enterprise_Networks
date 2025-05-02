@@ -1,0 +1,230 @@
+CEA#show run
+Building configuration...
+
+
+Current configuration : 3524 bytes
+!
+! Last configuration change at 17:40:13 UTC Fri May 2 2025
+version 15.1
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+!
+hostname CEA
+!
+boot-start-marker
+boot-end-marker
+!
+!
+!
+no aaa new-model
+!
+no network-clock-participate slot 2
+!
+dot11 syslog
+ip source-route
+!
+!
+!
+ip cef
+!
+!
+ipv6 unicast-routing
+ipv6 cef
+ipv6 dhcp pool STATEFUL
+ address prefix 2001:A3:1:2::2/64
+ dns-server 2001:4860:4860::8888
+ domain-name NETWORKLESSONS.LOCAL
+!
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+voice-card 0
+!
+!
+!
+!
+!
+!
+!
+crypto pki token default removal timeout 0
+!
+!
+!
+!
+license udi pid CISCO3825 sn FTX1228A2HM
+!
+redundancy
+!
+!
+!
+!
+crypto isakmp policy 1
+ encr aes
+ authentication pre-share
+ group 2
+crypto isakmp key CEACEB address 120.0.0.2
+crypto isakmp key CEACEC address 3.3.3.3
+!
+!
+crypto ipsec transform-set MYTRANSFORMSET esp-aes esp-sha-hmac
+!
+crypto ipsec profile GREOVERIPSEC
+ set transform-set MYTRANSFORMSET
+!
+!
+!
+!
+!
+!
+!
+!
+interface Loopback10
+ ip address 192.168.1.1 255.255.255.0
+ ip nat inside
+ ip virtual-reassembly in
+!
+interface Loopback20
+ ip address 172.16.0.1 255.255.0.0
+!
+interface Loopback30
+ ip address 10.0.1.1 255.255.255.0
+!
+interface Tunnel1
+ ip address 10.10.10.1 255.255.255.0
+ tunnel source 110.0.0.2
+ tunnel destination 120.0.0.2
+ tunnel protection ipsec profile GREOVERIPSEC
+!
+interface Tunnel2
+ ip address 20.20.20.1 255.255.255.0
+ tunnel source 110.0.0.2
+ tunnel destination 3.3.3.3
+ tunnel protection ipsec profile GREOVERIPSEC
+!
+interface Tunnel3
+ no ip address
+ ipv6 address 2001:A3FF::7/127
+ ipv6 enable
+ ipv6 dhcp client pd ISP_PREFIX
+ tunnel source 110.0.0.2
+ tunnel destination 1.0.0.104
+!
+interface Tunnel4
+ no ip address
+ ipv6 address 2001:A3FF::12/127
+ ipv6 enable
+ ipv6 mtu 1400
+ ipv6 ospf 1 area 0
+ tunnel source 110.0.0.2
+ tunnel destination 1.0.0.99
+!
+interface GigabitEthernet0/0
+ no ip address
+ duplex auto
+ speed auto
+ media-type rj45
+ ipv6 address ISP_PREFIX ::1:0:0:0:1/64
+ ipv6 nd managed-config-flag
+ ipv6 dhcp server STATEFUL
+ ipv6 ospf 1 area 0
+!
+interface GigabitEthernet0/1
+ ip address 110.0.0.2 255.255.255.0
+ ip nat outside
+ ip virtual-reassembly in
+ duplex auto
+ speed auto
+ media-type rj45
+ ipv6 address 2001:A3FF::10/127
+ ipv6 enable
+ ipv6 ospf 1 area 0
+!
+interface Serial0/0/0
+ no ip address
+ shutdown
+ no fair-queue
+ clock rate 2000000
+!
+interface Serial0/0/1
+ no ip address
+ shutdown
+ clock rate 2000000
+!
+interface Serial0/1/0
+ no ip address
+ shutdown
+ clock rate 2000000
+!
+interface Serial0/1/1
+ no ip address
+ shutdown
+ clock rate 2000000
+!
+interface FastEthernet2/0
+ no ip address
+ shutdown
+ duplex auto
+ speed auto
+!
+interface FastEthernet2/1
+ no ip address
+ shutdown
+ duplex auto
+ speed auto
+!
+router ospf 10
+ router-id 1.1.1.1
+ network 10.0.1.0 0.0.0.255 area 0
+ network 10.10.10.0 0.0.0.255 area 0
+ network 20.20.20.0 0.0.0.255 area 0
+ network 172.16.0.0 0.0.255.255 area 0
+ network 192.168.1.0 0.0.0.255 area 0
+!
+router ospf 1
+!
+ip forward-protocol nd
+!
+!
+no ip http server
+no ip http secure-server
+ip nat inside source list NAT interface GigabitEthernet0/1 overload
+ip route 0.0.0.0 0.0.0.0 110.0.0.1
+!
+ip access-list extended NAT
+ permit ip 192.168.1.0 0.0.0.255 any
+ permit ip 172.16.0.0 0.0.255.255 any
+ permit ip 10.0.1.0 0.0.0.255 any
+!
+access-list 100 permit gre host 110.0.0.2 host 120.0.0.2
+ipv6 router ospf 1
+!
+!
+!
+!
+!
+!
+!
+control-plane
+!
+!
+!
+!
+mgcp profile default
+!
+!
+!
+!
+!
+!
+line con 0
+line aux 0
+line vty 0 4
+ login
+ transport input all
+!
+scheduler allocate 20000 1000
+end

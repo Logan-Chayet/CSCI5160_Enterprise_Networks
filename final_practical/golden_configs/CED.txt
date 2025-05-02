@@ -1,0 +1,174 @@
+CED#show run
+Building configuration...
+
+
+Current configuration : 1946 bytes
+!
+! Last configuration change at 23:44:35 UTC Wed Apr 30 2025
+version 15.1
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+!
+hostname CED
+!
+boot-start-marker
+boot-end-marker
+!
+!
+!
+no aaa new-model
+!
+no network-clock-participate slot 2
+!
+dot11 syslog
+ip source-route
+!
+!
+!
+ip cef
+!
+!
+ipv6 unicast-routing
+ipv6 cef
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+voice-card 0
+!
+!
+!
+!
+!
+!
+!
+crypto pki token default removal timeout 0
+!
+!
+!
+!
+license udi pid CISCO3825 sn FTX1102A4P5
+!
+redundancy
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface Loopback1
+ no ip address
+ ipv6 enable
+!
+interface Loopback2
+ no ip address
+!
+interface GigabitEthernet0/0
+ no ip address
+ duplex auto
+ speed auto
+ media-type rj45
+ ipv6 address ISP_PREFIX ::1:0:0:0:1/64
+ ipv6 ospf 1 area 0
+!
+interface GigabitEthernet0/1
+ no ip address
+ duplex auto
+ speed auto
+ media-type rj45
+ ipv6 enable
+!
+interface Serial0/0/0
+ no ip address
+ shutdown
+ no fair-queue
+ clock rate 2000000
+!
+interface Serial0/0/1
+ no ip address
+ shutdown
+ clock rate 2000000
+!
+interface Serial0/1/0
+ no ip address
+ shutdown
+ clock rate 2000000
+!
+interface Serial0/1/1
+ no ip address
+ shutdown
+ clock rate 2000000
+!
+interface Serial1/0
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+interface Serial1/1
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+interface Serial1/2
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+interface Serial1/3
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+interface FastEthernet2/0
+ no ip address
+ duplex auto
+ speed auto
+ ipv6 address 2001:A3FF::9/127
+ ipv6 enable
+ ipv6 dhcp client pd ISP_PREFIX
+ ipv6 ospf 1 area 0
+!
+router ospf 1
+!
+ip forward-protocol nd
+!
+!
+no ip http server
+no ip http secure-server
+!
+ipv6 router ospf 1
+ router-id 11.11.11.11
+!
+!
+!
+!
+!
+!
+!
+control-plane
+!
+!
+!
+!
+mgcp profile default
+!
+!
+!
+!
+!
+!
+line con 0
+line aux 0
+line vty 0 4
+ login
+ transport input all
+!
+scheduler allocate 20000 1000
+end

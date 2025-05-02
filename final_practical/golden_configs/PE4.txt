@@ -1,0 +1,256 @@
+PE4#show run
+Building configuration...
+
+
+Current configuration : 4311 bytes
+!
+! Last configuration change at 23:37:30 UTC Thu May 1 2025
+version 15.1
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+!
+hostname PE4
+!
+boot-start-marker
+boot-end-marker
+!
+!
+!
+no aaa new-model
+!
+no network-clock-participate slot 2
+!
+dot11 syslog
+ip source-route
+!
+!
+!
+ip cef
+!
+!
+ipv6 unicast-routing
+ipv6 cef
+ipv6 dhcp pool CUSTOMERS
+ prefix-delegation pool GLOBAL_POOL
+!
+!
+multilink bundle-name authenticated
+!
+!
+!
+mpls traffic-eng tunnels
+mpls traffic-eng reoptimize timers frequency 10
+!
+voice-card 0
+!
+!
+!
+!
+!
+!
+!
+crypto pki token default removal timeout 0
+!
+!
+!
+!
+license udi pid CISCO3825 sn FTX1226A22F
+!
+redundancy
+!
+!
+!
+!
+crypto isakmp policy 1
+ encr aes
+ authentication pre-share
+ group 2
+crypto isakmp key CEBCEC address 120.0.0.2
+crypto isakmp key CEBCEC address 1.0.0.101
+!
+!
+crypto ipsec transform-set MYTRANSFORMSET esp-aes esp-sha-hmac
+!
+crypto ipsec profile GREOVERIPSEC
+ set transform-set MYTRANSFORMSET
+!
+!
+!
+!
+!
+!
+!
+interface Loopback0
+ ip address 1.0.0.104 255.255.255.255
+!
+interface Tunnel1
+ ip unnumbered Loopback0
+ tunnel mode mpls traffic-eng
+ tunnel destination 1.0.0.101
+ tunnel mpls traffic-eng autoroute announce
+ tunnel mpls traffic-eng priority 7 7
+ tunnel mpls traffic-eng bandwidth 3000
+ tunnel mpls traffic-eng path-option 1 dynamic
+ no routing dynamic
+!
+interface Tunnel2
+ ip unnumbered Loopback0
+ tunnel mode mpls traffic-eng
+ tunnel destination 1.0.0.102
+ tunnel mpls traffic-eng autoroute announce
+ tunnel mpls traffic-eng priority 7 7
+ tunnel mpls traffic-eng bandwidth 3000
+ tunnel mpls traffic-eng path-option 1 dynamic
+ no routing dynamic
+!
+interface Tunnel3
+ no ip address
+ ipv6 address 2001:A3FF::2/127
+ ipv6 enable
+ ipv6 mtu 1400
+ ipv6 dhcp server CUSTOMERS
+ ipv6 ospf 1 area 0
+ tunnel source 1.0.0.104
+ tunnel destination 120.0.0.2
+ tunnel protection ipsec profile GREOVERIPSEC
+!
+interface Tunnel4
+ no ip address
+ ipv6 address 2001:A3FF::5/127
+ ipv6 enable
+ ipv6 ospf 1 area 0
+ tunnel source 1.0.0.104
+ tunnel destination 1.0.0.101
+ tunnel protection ipsec profile GREOVERIPSEC
+!
+interface Tunnel5
+ no ip address
+ ipv6 address 2001:A3FF::6/127
+ ipv6 enable
+ ipv6 dhcp server CUSTOMERS
+ tunnel source 1.0.0.104
+ tunnel destination 110.0.0.2
+!
+interface GigabitEthernet0/0
+ ip address 172.20.1.49 255.255.255.252
+ duplex auto
+ speed auto
+ media-type rj45
+ mpls traffic-eng tunnels
+ ip rsvp bandwidth 100000 50000
+!
+interface GigabitEthernet0/1
+ no ip address
+ duplex auto
+ speed auto
+ media-type rj45
+!
+interface Serial1/0
+ no ip address
+ shutdown
+ no fair-queue
+ serial restart-delay 0
+!
+interface Serial1/1
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+interface Serial1/2
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+interface Serial1/3
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+interface FastEthernet2/0
+ no ip address
+ duplex auto
+ speed auto
+!
+interface FastEthernet2/0.11
+ encapsulation dot1Q 11
+ ip address 172.20.1.90 255.255.255.252
+ ip ospf cost 10000
+ mpls traffic-eng tunnels
+ ip rsvp bandwidth 100000 50000
+!
+interface FastEthernet2/0.30
+ encapsulation dot1Q 30
+ ip address 172.20.1.62 255.255.255.252
+ ip ospf cost 10000
+ mpls traffic-eng tunnels
+ ip rsvp bandwidth 100000 50000
+!
+interface FastEthernet2/0.60
+ encapsulation dot1Q 60
+ ip address 172.20.1.74 255.255.255.252
+ ip ospf cost 10000
+ mpls traffic-eng tunnels
+ ip rsvp bandwidth 100000 50000
+!
+interface FastEthernet2/0.80
+ encapsulation dot1Q 80
+ ip address 172.20.1.82 255.255.255.252
+ ip ospf cost 10000
+ mpls traffic-eng tunnels
+ ip rsvp bandwidth 100000 50000
+!
+interface FastEthernet2/1
+ no ip address
+ duplex auto
+ speed auto
+ ipv6 address 2001:A3FF::8/127
+ ipv6 enable
+ ipv6 dhcp server CUSTOMERS
+ ipv6 ospf 1 area 0
+!
+router ospf 1
+ mpls ldp autoconfig
+ mpls traffic-eng router-id Loopback0
+ mpls traffic-eng area 0
+ router-id 1.0.0.104
+ network 1.0.0.104 0.0.0.0 area 0
+ network 172.20.1.0 0.0.0.255 area 0
+!
+ip forward-protocol nd
+!
+!
+no ip http server
+no ip http secure-server
+ip route 110.0.0.0 255.255.255.0 Tunnel1
+ip route 120.0.0.0 255.255.255.0 Tunnel2
+!
+ipv6 local pool GLOBAL_POOL 2001:A3::/38 48
+ipv6 router ospf 1
+!
+!
+!
+!
+!
+!
+!
+control-plane
+!
+!
+!
+!
+mgcp profile default
+!
+!
+!
+!
+!
+!
+line con 0
+line aux 0
+line vty 0 4
+ login
+ transport input all
+!
+scheduler allocate 20000 1000
+end

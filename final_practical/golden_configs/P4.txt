@@ -1,0 +1,160 @@
+P4#show run
+Building configuration...
+
+
+Current configuration : 2000 bytes
+!
+! Last configuration change at 00:56:21 UTC Sun Apr 27 2025
+version 15.1
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+!
+hostname P4
+!
+boot-start-marker
+boot-end-marker
+!
+!
+!
+no aaa new-model
+!
+no network-clock-participate slot 1
+!
+dot11 syslog
+ip source-route
+!
+ip cef
+!
+!
+!
+!
+no ipv6 cef
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+mpls traffic-eng tunnels
+!
+voice-card 0
+!
+!
+!
+!
+!
+!
+!
+crypto pki token default removal timeout 0
+!
+!
+!
+!
+license udi pid CISCO3825 sn FTX1250A1TP
+!
+redundancy
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface Loopback0
+ ip address 1.0.0.4 255.255.255.255
+!
+interface GigabitEthernet0/0
+ ip address 172.20.1.26 255.255.255.252
+ duplex auto
+ speed auto
+ media-type rj45
+ mpls traffic-eng tunnels
+ ip rsvp bandwidth 100000 50000
+!
+interface GigabitEthernet0/1
+ ip address 172.20.1.41 255.255.255.252
+ duplex auto
+ speed auto
+ media-type rj45
+ mpls traffic-eng tunnels
+ ip rsvp bandwidth 100000 50000
+!
+interface Serial0/0/0
+ no ip address
+ shutdown
+ no fair-queue
+ clock rate 2000000
+!
+interface Serial0/0/1
+ no ip address
+ shutdown
+ clock rate 2000000
+!
+interface Serial0/1/0
+ no ip address
+ shutdown
+ clock rate 2000000
+!
+interface Serial0/1/1
+ no ip address
+ shutdown
+ clock rate 2000000
+!
+interface FastEthernet1/0
+ ip address 172.20.1.30 255.255.255.252
+ duplex auto
+ speed auto
+ mpls traffic-eng tunnels
+ ip rsvp bandwidth 100000 50000
+!
+interface FastEthernet1/1
+ ip address 172.20.1.22 255.255.255.252
+ duplex auto
+ speed auto
+ mpls traffic-eng tunnels
+ ip rsvp bandwidth 100000 50000
+!
+router ospf 1
+ mpls ldp autoconfig
+ mpls traffic-eng router-id Loopback0
+ mpls traffic-eng area 0
+ router-id 1.0.0.4
+ network 1.0.0.4 0.0.0.0 area 0
+ network 172.20.1.0 0.0.0.255 area 0
+!
+ip forward-protocol nd
+no ip http server
+no ip http secure-server
+!
+!
+!
+!
+!
+!
+!
+!
+!
+control-plane
+!
+!
+!
+!
+mgcp profile default
+!
+!
+!
+!
+!
+!
+line con 0
+line aux 0
+line vty 0 4
+ login
+ transport input all
+!
+scheduler allocate 20000 1000
+end

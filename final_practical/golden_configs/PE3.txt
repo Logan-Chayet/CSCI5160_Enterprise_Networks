@@ -1,0 +1,232 @@
+PE3#show run
+Building configuration...
+
+
+Current configuration : 3778 bytes
+!
+! Last configuration change at 15:48:35 UTC Fri May 2 2025
+version 15.1
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+!
+hostname PE3
+!
+boot-start-marker
+boot-end-marker
+!
+!
+!
+no aaa new-model
+!
+no network-clock-participate slot 2
+!
+dot11 syslog
+ip source-route
+!
+!
+!
+ip cef
+!
+!
+no ipv6 cef
+!
+multilink bundle-name authenticated
+!
+!
+!
+mpls traffic-eng tunnels
+mpls traffic-eng reoptimize timers frequency 10
+!
+voice-card 0
+!
+!
+!
+!
+!
+!
+!
+crypto pki token default removal timeout 0
+!
+!
+!
+!
+license udi pid CISCO3825 sn FTX0941A3QL
+!
+redundancy
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface Loopback0
+ ip address 1.0.0.103 255.255.255.255
+!
+interface Tunnel1
+ ip unnumbered Loopback0
+ tunnel mode mpls traffic-eng
+ tunnel destination 1.0.0.101
+ tunnel mpls traffic-eng autoroute announce
+ tunnel mpls traffic-eng priority 7 7
+ tunnel mpls traffic-eng bandwidth 5000
+ tunnel mpls traffic-eng path-option 1 dynamic
+ no routing dynamic
+!
+interface Tunnel2
+ ip unnumbered Loopback0
+ tunnel mode mpls traffic-eng
+ tunnel destination 1.0.0.102
+ tunnel mpls traffic-eng autoroute announce
+ tunnel mpls traffic-eng priority 7 7
+ tunnel mpls traffic-eng bandwidth 5000
+ tunnel mpls traffic-eng path-option 1 dynamic
+ no routing dynamic
+!
+interface Tunnel3
+ ip unnumbered Loopback0
+ tunnel mode mpls traffic-eng
+ tunnel destination 1.0.0.99
+ tunnel mpls traffic-eng autoroute announce
+ tunnel mpls traffic-eng priority 7 7
+ tunnel mpls traffic-eng bandwidth 3000
+ tunnel mpls traffic-eng path-option 1 dynamic
+ no routing dynamic
+!
+interface GigabitEthernet0/0
+ ip address 172.20.1.38 255.255.255.252
+ duplex auto
+ speed auto
+ media-type rj45
+ mpls traffic-eng tunnels
+ ip rsvp bandwidth 100000 50000
+!
+interface GigabitEthernet0/1
+ ip address 130.0.0.1 255.255.255.0
+ duplex auto
+ speed auto
+ media-type rj45
+!
+interface Serial0/2/0
+ no ip address
+ shutdown
+ no fair-queue
+ clock rate 2000000
+!
+interface Serial0/2/1
+ no ip address
+ shutdown
+ clock rate 2000000
+!
+interface Serial0/3/0
+ no ip address
+ shutdown
+ clock rate 2000000
+!
+interface Serial0/3/1
+ no ip address
+ shutdown
+ clock rate 2000000
+!
+interface FastEthernet0/0/0
+ no ip address
+!
+interface FastEthernet0/0/1
+ no ip address
+!
+interface FastEthernet0/0/2
+ no ip address
+!
+interface FastEthernet0/0/3
+ no ip address
+!
+interface FastEthernet2/0
+ no ip address
+ duplex auto
+ speed auto
+!
+interface FastEthernet2/0.20
+ encapsulation dot1Q 20
+ ip address 172.20.1.58 255.255.255.252
+ ip ospf cost 10000
+ mpls traffic-eng tunnels
+ ip rsvp bandwidth 100000 50000
+!
+interface FastEthernet2/0.50
+ encapsulation dot1Q 50
+ ip address 172.20.1.70 255.255.255.252
+ ip ospf cost 10000
+ mpls traffic-eng tunnels
+ ip rsvp bandwidth 100000 50000
+!
+interface FastEthernet2/0.80
+ encapsulation dot1Q 80
+ ip address 172.20.1.81 255.255.255.252
+ ip ospf cost 10000
+ mpls traffic-eng tunnels
+ ip rsvp bandwidth 100000 50000
+!
+interface FastEthernet2/0.90
+ encapsulation dot1Q 90
+ ip address 172.20.1.85 255.255.255.252
+ ip ospf cost 10000
+ mpls traffic-eng tunnels
+ ip rsvp bandwidth 100000 50000
+!
+interface FastEthernet2/1
+ no ip address
+ shutdown
+ duplex auto
+ speed auto
+!
+interface Vlan1
+ no ip address
+!
+router ospf 1
+ mpls ldp autoconfig
+ mpls traffic-eng router-id Loopback0
+ mpls traffic-eng area 0
+ router-id 1.0.0.103
+ network 1.0.0.103 0.0.0.0 area 0
+ network 172.20.1.0 0.0.0.255 area 0
+!
+ip forward-protocol nd
+!
+!
+no ip http server
+no ip http secure-server
+ip route 0.0.0.0 0.0.0.0 Tunnel3
+ip route 3.3.3.3 255.255.255.255 130.0.0.2
+ip route 110.0.0.0 255.255.255.0 Tunnel1
+ip route 120.0.0.0 255.255.255.0 Tunnel2
+!
+!
+!
+!
+!
+!
+!
+control-plane
+!
+!
+!
+!
+mgcp profile default
+!
+!
+!
+!
+!
+!
+line con 0
+line aux 0
+line vty 0 4
+ login
+ transport input all
+!
+scheduler allocate 20000 1000
+end

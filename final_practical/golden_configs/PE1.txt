@@ -1,0 +1,313 @@
+PE1#show run
+Building configuration...
+
+
+Current configuration : 6011 bytes
+!
+! Last configuration change at 22:20:28 UTC Thu May 1 2025
+version 15.1
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+!
+hostname PE1
+!
+boot-start-marker
+boot-end-marker
+!
+!
+!
+no aaa new-model
+!
+no network-clock-participate slot 1
+no network-clock-participate slot 2
+!
+dot11 syslog
+ip source-route
+!
+ip cef
+!
+!
+!
+!
+no ip domain lookup
+ipv6 unicast-routing
+ipv6 cef
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+mpls traffic-eng tunnels
+mpls traffic-eng reoptimize timers frequency 10
+!
+voice-card 0
+!
+!
+!
+!
+!
+!
+!
+crypto pki token default removal timeout 0
+!
+!
+!
+!
+license udi pid CISCO3825 sn FTX1241A2HJ
+!
+redundancy
+!
+!
+!
+!
+crypto isakmp policy 1
+ encr aes
+ authentication pre-share
+ group 2
+crypto isakmp key CEBCEC address 120.0.0.2
+crypto isakmp key CEBCEC address 1.0.0.104
+!
+!
+crypto ipsec transform-set MYTRANSFORMSET esp-aes esp-sha-hmac
+!
+crypto ipsec profile GREOVERIPSEC
+ set transform-set MYTRANSFORMSET
+!
+!
+!
+!
+!
+!
+!
+interface Loopback0
+ ip address 1.0.0.101 255.255.255.255
+!
+interface Tunnel1
+ ip unnumbered Loopback0
+ tunnel mode mpls traffic-eng
+ tunnel destination 1.0.0.102
+ tunnel mpls traffic-eng autoroute announce
+ tunnel mpls traffic-eng priority 7 7
+ tunnel mpls traffic-eng bandwidth 5000
+ tunnel mpls traffic-eng path-option 1 explicit name PE1_PE2 lockdown
+ tunnel mpls traffic-eng path-option 2 explicit name PE1_PE2_backup
+ tunnel mpls traffic-eng path-option 3 dynamic
+ no routing dynamic
+!
+interface Tunnel2
+ ip unnumbered Loopback0
+ tunnel mode mpls traffic-eng
+ tunnel destination 1.0.0.103
+ tunnel mpls traffic-eng autoroute announce
+ tunnel mpls traffic-eng priority 7 7
+ tunnel mpls traffic-eng bandwidth 5000
+ tunnel mpls traffic-eng path-option 1 explicit name PE1_PE3 lockdown
+ tunnel mpls traffic-eng path-option 2 dynamic
+ no routing dynamic
+!
+interface Tunnel3
+ ip unnumbered Loopback0
+ tunnel mode mpls traffic-eng
+ tunnel destination 1.0.0.105
+ tunnel mpls traffic-eng autoroute announce
+ tunnel mpls traffic-eng priority 7 7
+ tunnel mpls traffic-eng bandwidth 5000
+ tunnel mpls traffic-eng path-option 1 explicit name PE1_PE5 lockdown
+ tunnel mpls traffic-eng path-option 2 dynamic
+ no routing dynamic
+!
+interface Tunnel4
+ ip unnumbered Loopback0
+ tunnel mode mpls traffic-eng
+ tunnel destination 1.0.0.104
+ tunnel mpls traffic-eng autoroute announce
+ tunnel mpls traffic-eng priority 7 7
+ tunnel mpls traffic-eng bandwidth 3000
+ tunnel mpls traffic-eng path-option 1 dynamic
+ no routing dynamic
+!
+interface Tunnel5
+ no ip address
+ ipv6 address 2001:A3FF::/127
+ ipv6 enable
+ ipv6 mtu 1400
+ ipv6 ospf 1 area 0
+ tunnel source 1.0.0.101
+ tunnel destination 120.0.0.2
+ tunnel protection ipsec profile GREOVERIPSEC
+!
+interface Tunnel6
+ no ip address
+ ipv6 address 2001:A3FF::4/127
+ ipv6 enable
+ ipv6 ospf 1 area 0
+ tunnel source 1.0.0.101
+ tunnel destination 1.0.0.104
+ tunnel protection ipsec profile GREOVERIPSEC
+!
+interface Tunnel7
+ ip unnumbered Loopback0
+ tunnel mode mpls traffic-eng
+ tunnel destination 1.0.0.99
+ tunnel mpls traffic-eng autoroute announce
+ tunnel mpls traffic-eng priority 7 7
+ tunnel mpls traffic-eng bandwidth 3000
+ tunnel mpls traffic-eng path-option 1 dynamic
+ no routing dynamic
+!
+interface GigabitEthernet0/0
+ ip address 172.20.1.1 255.255.255.252
+ ip ospf cost 1
+ duplex auto
+ speed auto
+ media-type rj45
+ mpls traffic-eng tunnels
+ ip rsvp bandwidth 100000 50000
+!
+interface GigabitEthernet0/1
+ ip address 110.0.0.1 255.255.255.0
+ duplex auto
+ speed auto
+ media-type rj45
+ ipv6 address 2001:A3FF::11/127
+ ipv6 enable
+ ipv6 ospf 1 area 0
+!
+interface Serial0/2/0
+ no ip address
+ shutdown
+ no fair-queue
+ clock rate 2000000
+!
+interface Serial0/2/1
+ no ip address
+ shutdown
+ clock rate 2000000
+!
+interface Serial0/3/0
+ no ip address
+ shutdown
+ clock rate 2000000
+!
+interface Serial0/3/1
+ no ip address
+ shutdown
+ clock rate 2000000
+!
+interface FastEthernet1/0
+ no ip address
+ shutdown
+ duplex auto
+ speed auto
+!
+interface FastEthernet2/0
+ no ip address
+ duplex auto
+ speed auto
+!
+interface FastEthernet2/0.10
+ encapsulation dot1Q 10
+ ip address 172.20.1.53 255.255.255.252
+ ip ospf cost 10000
+ mpls traffic-eng tunnels
+ ip rsvp bandwidth 100000 50000
+!
+interface FastEthernet2/0.20
+ encapsulation dot1Q 20
+ ip address 172.20.1.57 255.255.255.252
+ ip ospf cost 10000
+ mpls traffic-eng tunnels
+ ip rsvp bandwidth 100000 50000
+!
+interface FastEthernet2/0.30
+ encapsulation dot1Q 30
+ ip address 172.20.1.61 255.255.255.252
+ ip ospf cost 10000
+ mpls traffic-eng tunnels
+ ip rsvp bandwidth 100000 50000
+!
+interface FastEthernet2/0.40
+ encapsulation dot1Q 40
+ ip address 172.20.1.65 255.255.255.252
+ ip ospf cost 10000
+ mpls traffic-eng tunnels
+ ip rsvp bandwidth 100000 50000
+!
+router ospf 1
+ mpls ldp autoconfig
+ mpls traffic-eng router-id Loopback0
+ mpls traffic-eng area 0
+ router-id 1.0.0.101
+ redistribute connected
+ network 1.0.0.101 0.0.0.0 area 0
+ network 172.20.1.0 0.0.0.255 area 0
+!
+ip forward-protocol nd
+no ip http server
+no ip http secure-server
+!
+!
+ip route 0.0.0.0 0.0.0.0 Tunnel7
+ip route 3.3.3.3 255.255.255.255 Tunnel2
+ip route 3.3.3.3 255.255.255.255 Tunnel3
+ip route 120.0.0.0 255.255.255.0 Tunnel1
+ip route 130.0.0.0 255.255.255.0 Tunnel2
+ip route 140.0.0.0 255.255.255.0 Tunnel3
+!
+ip explicit-path name PE1_PE2 enable
+ next-address 1.0.0.1
+ next-address 1.0.0.3
+ next-address 1.0.0.5
+ next-address 1.0.0.2
+ next-address 1.0.0.102
+!
+ip explicit-path name PE1_PE2_backup enable
+ next-address 1.0.0.1
+ next-address 1.0.0.5
+ next-address 1.0.0.4
+ next-address 1.0.0.2
+ next-address 1.0.0.102
+!
+ip explicit-path name PE1_PE3 enable
+ next-address 1.0.0.1
+ next-address 1.0.0.3
+ next-address 1.0.0.4
+ next-address 1.0.0.2
+ next-address 1.0.0.103
+!
+ip explicit-path name PE1_PE5 enable
+ next-address 1.0.0.1
+ next-address 1.0.0.5
+ next-address 1.0.0.4
+ next-address 1.0.0.105
+!
+ipv6 router ospf 1
+!
+!
+!
+!
+!
+!
+!
+control-plane
+!
+!
+!
+!
+mgcp profile default
+!
+!
+!
+!
+!
+!
+line con 0
+line aux 0
+line vty 0 4
+ login
+ transport input all
+!
+scheduler allocate 20000 1000
+end

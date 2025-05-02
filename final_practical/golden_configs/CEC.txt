@@ -1,0 +1,204 @@
+CEC#show run
+Building configuration...
+
+
+Current configuration : 3025 bytes
+!
+! Last configuration change at 23:43:56 UTC Wed Apr 30 2025
+version 15.1
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+!
+hostname CEC
+!
+boot-start-marker
+boot-end-marker
+!
+!
+!
+no aaa new-model
+!
+memory-size iomem 5
+no network-clock-participate slot 1
+!
+dot11 syslog
+ip source-route
+!
+ip cef
+!
+!
+!
+!
+no ipv6 cef
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+voice-card 0
+!
+!
+!
+!
+!
+!
+!
+crypto pki token default removal timeout 0
+!
+!
+!
+!
+license udi pid CISCO3825 sn FTX0910A14X
+!
+redundancy
+!
+!
+!
+!
+crypto isakmp policy 1
+ encr aes
+ authentication pre-share
+ group 2
+crypto isakmp key CEACEC address 110.0.0.2
+crypto isakmp key CEBCEC address 120.0.0.2
+!
+!
+crypto ipsec transform-set MYTRANSFORMSET esp-aes esp-sha-hmac
+!
+crypto ipsec profile GREOVERIPSEC
+ set transform-set MYTRANSFORMSET
+!
+!
+!
+!
+!
+!
+!
+!
+interface Loopback1
+ ip address 3.3.3.3 255.255.255.255
+!
+interface Loopback10
+ ip address 192.168.3.1 255.255.255.0
+ ip nat inside
+ ip virtual-reassembly in
+!
+interface Loopback20
+ ip address 10.0.3.1 255.255.255.0
+ ip nat inside
+ ip virtual-reassembly in
+!
+interface Tunnel1
+ ip address 20.20.20.2 255.255.255.0
+ tunnel source 3.3.3.3
+ tunnel destination 110.0.0.2
+ tunnel protection ipsec profile GREOVERIPSEC
+!
+interface Tunnel2
+ ip address 30.30.30.2 255.255.255.0
+ tunnel source 3.3.3.3
+ tunnel destination 120.0.0.2
+ tunnel protection ipsec profile GREOVERIPSEC
+!
+interface GigabitEthernet0/0
+ ip address 140.0.0.2 255.255.255.0
+ ip nat outside
+ ip virtual-reassembly in
+ duplex auto
+ speed auto
+ media-type rj45
+!
+interface GigabitEthernet0/1
+ ip address 130.0.0.2 255.255.255.0
+ ip nat outside
+ ip virtual-reassembly in
+ duplex auto
+ speed auto
+ media-type rj45
+!
+interface Serial0/2/0
+ no ip address
+ shutdown
+ no fair-queue
+ clock rate 2000000
+!
+interface Serial0/2/1
+ no ip address
+ shutdown
+ clock rate 2000000
+!
+interface Serial0/3/0
+ no ip address
+ shutdown
+ clock rate 2000000
+!
+interface Serial0/3/1
+ no ip address
+ shutdown
+ clock rate 2000000
+!
+interface FastEthernet1/0
+ no ip address
+ shutdown
+ duplex auto
+ speed auto
+!
+interface FastEthernet1/1
+ no ip address
+ shutdown
+ duplex auto
+ speed auto
+!
+router ospf 10
+ router-id 3.3.3.3
+ network 10.0.3.0 0.0.0.255 area 0
+ network 20.20.20.0 0.0.0.255 area 0
+ network 30.30.30.0 0.0.0.255 area 100
+ network 192.168.3.0 0.0.0.255 area 0
+!
+ip forward-protocol nd
+no ip http server
+no ip http secure-server
+!
+!
+ip nat inside source list NAT interface GigabitEthernet0/1 overload
+ip nat inside source list NAT2 interface GigabitEthernet0/0 overload
+ip route 0.0.0.0 0.0.0.0 130.0.0.1
+ip route 0.0.0.0 0.0.0.0 140.0.0.1
+!
+ip access-list extended NAT
+ permit ip 192.168.3.0 0.0.0.255 any
+ permit ip 10.0.3.0 0.0.0.255 any
+ip access-list extended NAT2
+ permit ip 192.168.3.0 0.0.0.255 any
+ permit ip 10.0.3.0 0.0.0.255 any
+!
+!
+!
+!
+!
+!
+!
+control-plane
+!
+!
+!
+!
+mgcp profile default
+!
+!
+!
+!
+!
+!
+line con 0
+line aux 0
+line vty 0 4
+ login
+ transport input all
+!
+scheduler allocate 20000 1000
+end
